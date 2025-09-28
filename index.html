@@ -1,71 +1,203 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brian M. Staes - Portfolio</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Brian M. Staes — Portfolio</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="container">
-
     <!-- Sidebar -->
     <aside class="sidebar">
-      <img src="your-photo.jpg" alt="Profile photo">
-      <h1>Brian M. Staes</h1>
-      <p>Postdoctoral Scholar<br>Oregon State University</p>
-      <p>Transportation Engineering</p>
+      <div class="profile">
+        <!-- Put your headshot as /img/brian.jpg (recommended ~500x500) -->
+        <img src="img/brian.jpg" alt="Brian M. Staes headshot" />
+        <h1>Brian M. Staes</h1>
+        <p class="role">Postdoctoral Scholar</p>
+        <p class="affil">School of Civil &amp; Construction Engineering<br/>Oregon State University</p>
+        <div class="quick-links">
+          <a href="mailto:staesb@oregonstate.edu" aria-label="Email">✉️ Email</a>
+          <a href="https://github.com/brianstaes" target="_blank" rel="noopener" aria-label="GitHub">🐙 GitHub</a>
+          <!-- If you have a direct Scholar profile link, replace this -->
+          <a href="https://scholar.google.com/" target="_blank" rel="noopener" aria-label="Google Scholar">🎓 Scholar</a>
+          <!-- Optional: host a PDF at /assets/Brian_Staes_CV.pdf -->
+          <a href="assets/Brian_Staes_CV.pdf" target="_blank" rel="noopener" aria-label="Download CV">📄 CV (PDF)</a>
+        </div>
+      </div>
 
-      <nav>
+      <nav class="nav">
         <a href="#about">About</a>
         <a href="#news">News</a>
-        <a href="#projects">Projects</a>
+        <a href="#experience">Experience</a>
         <a href="#publications">Publications</a>
+        <a href="#reports">Reports</a>
+        <a href="#grants">Funded Proposals</a>
+        <a href="#talks">Talks</a>
+        <a href="#teaching">Teaching</a>
+        <a href="#awards">Awards</a>
+        <a href="#service">Service</a>
         <a href="#contact">Contact</a>
       </nav>
 
-      <div class="links">
-        <p>📍 Oregon, USA</p>
-        <p>✉️ <a href="mailto:brian@example.com">Email</a></p>
-        <p>🐙 <a href="https://github.com/brianstaes">GitHub</a></p>
-        <p>🎓 <a href="https://scholar.google.com">Google Scholar</a></p>
-      </div>
+      <footer class="sidebar-footer">
+        <small>© <span id="year"></span> Brian M. Staes</small>
+      </footer>
     </aside>
 
-    <!-- Main Content -->
-    <main class="content">
-      <section id="about">
-        <h2>About Me</h2>
-        <p>Write a short bio here about your background, research interests, and goals.</p>
+    <!-- Main content -->
+    <main class="content" id="content">
+      <section id="about" class="section">
+        <h2>About</h2>
+        <p>
+          I’m a transportation engineering researcher focused on natural-hazard-driven infrastructure resilience, traffic-flow modeling (including the Length-Based Cell-State framework), and climate-informed risk assessment for U.S. rail networks. My work blends operations, climate data (e.g., NSRDB, LOCA), and decision support to help agencies harden critical assets and keep people and goods moving.
+        </p>
       </section>
 
-      <section id="news">
+      <section id="news" class="section">
         <h2>News</h2>
-        <ul>
-          <li><b>2025.09:</b> Gave invited seminar at XYZ University.</li>
-          <li><b>2025.06:</b> Published paper on Rail Infrastructure Resilience.</li>
+        <ul class="bullets">
+          <li><b>2025-09:</b> Poster at TRB on climate-driven rail thermal buckling risk modeling.</li>
+          <li><b>2025-07:</b> <i>TRR</i> paper on LBCS macroscopic congestion patterns published (open data/code forthcoming).</li>
         </ul>
       </section>
 
-      <section id="projects">
-        <h2>Projects</h2>
-        <p>Summarize your major projects.</p>
+      <section id="experience" class="section">
+        <h2>Experience</h2>
+        <div class="timeline">
+          <div class="item">
+            <div class="when">2025&nbsp;–&nbsp;Present</div>
+            <div class="what">
+              <b>Postdoctoral Scholar</b>, Oregon State University — School of Civil &amp; Construction Engineering
+            </div>
+          </div>
+          <div class="item">
+            <div class="when">2021&nbsp;–&nbsp;2025</div>
+            <div class="what">
+              <b>Graduate Research Assistant / Ph.D. Student</b>, Oregon State University — CCE
+            </div>
+          </div>
+          <div class="item">
+            <div class="when">2018&nbsp;–&nbsp;2020</div>
+            <div class="what">
+              <b>Graduate Research Assistant</b>, CUTR — University of South Florida
+            </div>
+          </div>
+          <div class="item">
+            <div class="when">2016&nbsp;–&nbsp;2018</div>
+            <div class="what">
+              <b>Teaching Assistant</b>, Florida Gulf Coast University
+            </div>
+          </div>
+        </div>
+        <p class="note">Degrees: Ph.D., Oregon State University (2025); M.S., USF (2020); B.S., FGCU (2018).</p>
       </section>
 
-      <section id="publications">
-        <h2>Publications</h2>
-        <ul>
-          <li>Staes, B.M. et al. (2025). Example Paper. <i>Journal Name</i>.</li>
+      <section id="publications" class="section">
+        <h2>Publications (Selected)</h2>
+        <ol class="pubs">
+          <li>
+            Staes, B.M., Wang, H., Bertini, R.L. (2024). Development of a Length-Based Cell-State Framework Toward the Re-Creation of Large-Scale Dense Congestion Patterns.
+            <i>Transportation Research Record</i>.
+          </li>
+          <li>
+            Liu, C., Staes, B.M., Wang, H. (2025). Evacuation time estimates for life safety in Tsunami Hazards.
+            <i>International Journal of Disaster Risk Reduction</i>, 119, 105327.
+          </li>
+          <li>
+            Ghoreishi, B., Staes, B.M., Liu, C., Wang, H. (2025). Mapping Climate Extremes and Infrastructure Vulnerability: A New Database for U.S. Railroads. <i>Submitted</i>.
+          </li>
+          <li>
+            Staes, B.M., Ghoreishi, B., Liu, C., Wang, H. Simplified Risk Analysis Framework for Rail Thermal Buckling Under Future Climatic Extremes. <i>Working paper</i>.
+          </li>
+          <li>
+            Yuksel, E., Bertini, R.L., Li, X., Staes, B.M., Ozkul, S. (2022). State-Dependent PCE for Multiple Truck Lengths.
+            <i>TRR</i>.
+          </li>
+          <li>
+            Staes, B.M., Menon, N., Bertini, R.L. (2021). Network performance during emergency evacuations: Hurricane Irma.
+            <i>TR Part D</i>.
+          </li>
+        </ol>
+        <p class="note">Full list and citations on Google Scholar.</p>
+      </section>
+
+      <section id="reports" class="section">
+        <h2>Reports</h2>
+        <ul class="bullets">
+          <li>Improving Guidance for Speed Safety Cameras — ODOT SPR-873 (with Figliozzi, Semensky, Wang, Sedighi).</li>
+          <li>Piloting Smart Work Zone Tech for Real-Time Lane Closure Info — ODOT SPR-860.</li>
+          <li>Improved Systemic Analysis to Predict Roadway Safety Performance — ODOT SPR-849.</li>
+          <li>Risk &amp; Resilience of Railway Infrastructure — FRA C-STTAR (ongoing).</li>
         </ul>
       </section>
 
-      <section id="contact">
+      <section id="grants" class="section">
+        <h2>Funded Proposals (Selected)</h2>
+        <ul class="bullets">
+          <li>NPS: Risk preparedness &amp; resilience planning for evacuations (Wrangell-St Elias) — $520,524.</li>
+          <li>FRA C-STTAR: REIN-FORCE Workforce &amp; Rail Resilience — $1,086,384 (subproject).</li>
+          <li>FRA C-STTAR: Risk &amp; Resilience of Railway Infrastructure — $796,506 (subproject).</li>
+          <li>ODOT: Automated Speed Enforcement Guidance — $140,000.</li>
+        </ul>
+      </section>
+
+      <section id="talks" class="section">
+        <h2>Talks &amp; Conference Presentations (Selected)</h2>
+        <ul class="bullets">
+          <li>TRB 2025: Rail Thermal Buckling under Climatic Extremes (Poster).</li>
+          <li>TRB 2024: LBCS congestion patterns (Poster).</li>
+          <li>NaTMEC 2022: Radar + probe data for travel time estimation (Talk).</li>
+          <li>ITS America 2019–2020: Visualization &amp; congestion strategy talks.</li>
+        </ul>
+      </section>
+
+      <section id="teaching" class="section">
+        <h2>Teaching &amp; Guest Lectures</h2>
+        <ul class="bullets two-col">
+          <li>Traffic Flow Theory (Time–Space Diagrams; Macroscopic Models)</li>
+          <li>Signal Design &amp; Timing Basics; LOS of Signalized Intersections</li>
+          <li>Queueing Theory (CE 491/593, OSU)</li>
+          <li>Evacuation Modeling (ABM + LCD/least-cost path)</li>
+          <li>Guest: TUM LBCS model for evacuations</li>
+        </ul>
+      </section>
+
+      <section id="awards" class="section">
+        <h2>Awards &amp; Honors</h2>
+        <ul class="bullets two-col">
+          <li>CUTC Milton Pikarsky Award (Best MS Thesis), 2022</li>
+          <li>TRB Cunard Award (Operations), 2022</li>
+          <li>PacTrans UTC Student of the Year, 2021</li>
+          <li>DDETFP Fellow (FHWA), 2019–2022</li>
+          <li>CTEDD UTC Student of the Year, 2019</li>
+        </ul>
+      </section>
+
+      <section id="service" class="section">
+        <h2>Professional Service</h2>
+        <ul class="bullets">
+          <li>TRB AR080 Highway/Rail Grade Crossings — Young Member (2023–2025)</li>
+          <li>USF ITE Student Chapter — Director of Events (2019), VP (2020)</li>
+          <li>ASCE Student Chapter — Steel Bridge Co-Captain (2017)</li>
+        </ul>
+      </section>
+
+      <section id="contact" class="section">
         <h2>Contact</h2>
-        <p>Email: <a href="mailto:brian@example.com">brian@example.com</a></p>
+        <p>
+          <b>Email:</b> <a href="mailto:staesb@oregonstate.edu">staesb@oregonstate.edu</a><br/>
+          <b>GitHub:</b> <a href="https://github.com/brianstaes" target="_blank" rel="noopener">github.com/brianstaes</a><br/>
+          <b>Location:</b> Oregon, USA
+        </p>
       </section>
     </main>
   </div>
 
+  <button id="toTop" class="to-top" aria-label="Back to top">↑</button>
   <script src="script.js"></script>
 </body>
 </html>
