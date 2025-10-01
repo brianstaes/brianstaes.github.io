@@ -87,17 +87,21 @@ body {
   padding-bottom: 5px;
 }
 
-.news-list li {
-  margin-bottom: 1rem;
+.news-photos {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
 }
 
-/* --- Dissertation defense photo gallery --- */
 .news-photos img {
-  height: 180px;      /* keeps images uniform height */
+  max-width: 2in;   /* cap width */
+  max-height: 2in;  /* cap height */
   width: auto;
+  height: auto;
   border-radius: 6px;
-  object-fit: cover;  /* clean crop */
+  object-fit: cover;
 }
+
 
 
 /* Other styles (bullets, timeline, etc.) remain yours */
