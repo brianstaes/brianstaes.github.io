@@ -94,8 +94,8 @@ body {
 }
 
 .news-photos img {
-  max-width: 2in;   /* cap width */
-  max-height: 2in;  /* cap height */
+  max-width: 3in;   /* cap width */
+  max-height: 3in;  /* cap height */
   width: auto;
   height: auto;
   border-radius: 6px;
