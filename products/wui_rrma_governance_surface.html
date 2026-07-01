@@ -1,0 +1,235 @@
+
+<style>
+.wg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0 6px;}
+.wlbl{font-size:11px;color:var(--color-text-secondary);margin-bottom:4px;}
+.wctrl{display:flex;flex-wrap:wrap;gap:12px;margin:6px 0;}
+.wc{flex:1;min-width:130px;display:flex;flex-direction:column;gap:3px;}
+.wc label{font-size:11px;color:var(--color-text-secondary);}
+.wv{font-size:12px;font-weight:500;color:var(--color-text-primary);}
+.wleg{display:flex;flex-wrap:wrap;gap:10px;font-size:11px;color:var(--color-text-secondary);margin-top:6px;}
+.wli{display:flex;align-items:center;gap:4px;}
+.wsw{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+</style>
+
+<div class="wg">
+  <div>
+    <div class="wlbl">RRMA composite surface — 3D oblique view</div>
+    <canvas id="wc3d" width="300" height="230" style="width:100%;border-radius:6px;display:block;"></canvas>
+  </div>
+  <div>
+    <div class="wlbl">Regime map (τ = <span id="wtlbl">45</span>) — top view</div>
+    <canvas id="wc2d" width="300" height="230" style="width:100%;border-radius:6px;display:block;"></canvas>
+  </div>
+</div>
+
+<div class="wlbl" style="margin-top:2px;">Area contour = ΣRRMA — community score vs. fire risk response</div>
+<div style="position:relative;height:118px;margin-bottom:8px;">
+  <canvas id="wcrv"></canvas>
+</div>
+
+<div class="wctrl">
+  <div class="wc">
+    <label>Regime threshold τ</label>
+    <input type="range" id="wst" min="15" max="80" value="45" step="1">
+    <span class="wv" id="wvt">45</span>
+  </div>
+  <div class="wc">
+    <label>Resource weight α</label>
+    <input type="range" id="wsa" min="10" max="70" value="38" step="1">
+    <span class="wv" id="wva">38%</span>
+  </div>
+  <div class="wc">
+    <label>Coordination weight β</label>
+    <input type="range" id="wsb" min="10" max="70" value="35" step="1">
+    <span class="wv" id="wvb">35%</span>
+  </div>
+</div>
+
+<div class="wleg">
+  <span class="wli"><span class="wsw" style="background:#2a7a3a"></span>Mitigation-dominant regime</span>
+  <span class="wli"><span class="wsw" style="background:#b03030"></span>Recovery-dominant regime</span>
+  <span class="wli"><span class="wsw" style="background:#ffd700;"></span>Critical threshold τ contour</span>
+  <span class="wli"><span class="wsw" style="background:#4d8fc0;border-radius:50%;"></span>Actor clusters (by typology)</span>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+(function(){
+'use strict';
+const N=36;
+const PEAKS=[
+  {cx:.20,cy:.25,s:.12,rw:.65,cw:.50},
+  {cx:.60,cy:.18,s:.09,rw:.88,cw:.85},
+  {cx:.45,cy:.50,s:.15,rw:.72,cw:.75},
+  {cx:.75,cy:.65,s:.10,rw:.60,cw:.80},
+  {cx:.15,cy:.70,s:.08,rw:.40,cw:.35},
+  {cx:.85,cy:.40,s:.07,rw:.78,cw:.65},
+];
+const ACTOR_LABELS=['Residential','HOA','Fire district','Forest Svc.','Private','Utility'];
+
+const ERISK=(()=>{
+  const r=new Float32Array(N*N);
+  [{cx:.38,cy:.42,s:.20,w:.85},{cx:.70,cy:.28,s:.14,w:.72},{cx:.20,cy:.62,s:.12,w:.78}].forEach(p=>{
+    for(let j=0;j<N;j++)for(let i=0;i<N;i++){
+      const x=i/(N-1),y=j/(N-1),dx=x-p.cx,dy=y-p.cy;
+      r[j*N+i]=Math.min(1,r[j*N+i]+p.w*Math.exp(-(dx*dx+dy*dy)/(2*p.s*p.s)));
+    }
+  });
+  return r;
+})();
+
+function gau(x,y,cx,cy,s){const dx=x-cx,dy=y-cy;return Math.exp(-(dx*dx+dy*dy)/(2*s*s));}
+
+function computeScores(alpha,beta){
+  const gamma=Math.max(5,100-alpha-beta),tot=alpha+beta+gamma;
+  const wa=alpha/tot,wb=beta/tot,wc=gamma/tot;
+  const sc=new Float32Array(N*N);
+  for(let j=0;j<N;j++)for(let i=0;i<N;i++){
+    const x=i/(N-1),y=j/(N-1);
+    let res=0,crd=0,rr=0;
+    PEAKS.forEach(p=>{const g=gau(x,y,p.cx,p.cy,p.s);res+=p.rw*g;crd+=p.cw*g;rr+=g;});
+    sc[j*N+i]=Math.min(100,(wa*Math.min(1,res*1.2)+wb*Math.min(1,crd*1.1)+wc*Math.min(1,rr))*100);
+  }
+  return sc;
+}
+
+function draw2D(sc,thresh){
+  const cv=document.getElementById('wc2d');
+  const ctx=cv.getContext('2d');
+  const W=cv.width,H=cv.height,cw=W/N,ch=H/N;
+  ctx.clearRect(0,0,W,H);
+  for(let j=0;j<N;j++)for(let i=0;i<N;i++){
+    const s=sc[j*N+i],ab=s>=thresh,eco=ERISK[j*N+i];
+    if(ab){
+      const t=(s-thresh)/(100-thresh);
+      ctx.fillStyle=`rgb(${Math.round(10+55*eco)},${Math.round(80+120*t)},${Math.round(28+38*t)})`;
+    } else {
+      const t=Math.max(0,1-s/thresh);
+      ctx.fillStyle=`rgb(${Math.round(90+105*t)},${Math.round(22+18*(1-t))},${Math.round(22+18*(1-t))})`;
+    }
+    ctx.fillRect(Math.floor(i*cw),Math.floor(j*ch),Math.ceil(cw)+1,Math.ceil(ch)+1);
+  }
+  ctx.strokeStyle='rgba(255,215,0,0.95)';ctx.lineWidth=1.0;
+  for(let j=1;j<N-1;j++)for(let i=1;i<N-1;i++){
+    const ab=sc[j*N+i]>=thresh;
+    if([sc[(j-1)*N+i],sc[(j+1)*N+i],sc[j*N+i-1],sc[j*N+i+1]].some(n=>(n>=thresh)!==ab)){
+      ctx.strokeRect(Math.floor(i*cw),Math.floor(j*ch),Math.ceil(cw)+1,Math.ceil(ch)+1);
+    }
+  }
+  PEAKS.forEach((p,idx)=>{
+    const px=p.cx*W,py=p.cy*H;
+    ctx.beginPath();ctx.arc(px,py,4,0,Math.PI*2);
+    ctx.fillStyle='rgba(77,143,192,0.92)';ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,0.75)';ctx.lineWidth=1;ctx.stroke();
+  });
+  ctx.font='10px sans-serif';
+  ctx.fillStyle='rgba(180,255,180,0.88)';ctx.textAlign='left';ctx.fillText('Mitigation-dominant',3,12);
+  ctx.fillStyle='rgba(255,195,195,0.88)';ctx.textAlign='right';ctx.fillText('τ='+Math.round(thresh),W-3,H-3);
+}
+
+function draw3D(sc,thresh){
+  const cv=document.getElementById('wc3d');
+  const ctx=cv.getContext('2d');
+  const W=cv.width,H=cv.height;
+  ctx.clearRect(0,0,W,H);
+  const ns=18,step=2;
+  const cs=8,oblX=5.5,oblY=3.0,zS=50,ox=18,oy=162;
+  const proj=(gi,gj,z)=>({x:ox+gi*cs+gj*oblX,y:oy+gj*oblY-z*zS});
+  const tn=thresh/100;
+  ctx.strokeStyle='rgba(255,215,0,0.38)';ctx.lineWidth=0.6;ctx.setLineDash([3,3]);
+  for(let k=0;k<=ns;k+=3){
+    let p=proj(0,k,tn),q=proj(ns,k,tn);
+    ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();
+    p=proj(k,0,tn);q=proj(k,ns,tn);
+    ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();
+  }
+  ctx.setLineDash([]);
+  for(let jj=0;jj<ns;jj++)for(let i=0;i<ns;i++){
+    const si=Math.min(i*step,N-1),si1=Math.min((i+1)*step,N-1);
+    const sj=Math.min(jj*step,N-1),sj1=Math.min((jj+1)*step,N-1);
+    const s00=sc[sj*N+si]/100,s10=sc[sj*N+si1]/100;
+    const s01=sc[sj1*N+si]/100,s11=sc[sj1*N+si1]/100;
+    const avg=(s00+s10+s01+s11)/4;
+    const p00=proj(i,jj,s00),p10=proj(i+1,jj,s10);
+    const p11=proj(i+1,jj+1,s11),p01=proj(i,jj+1,s01);
+    if(avg>=thresh/100){
+      const b=0.28+0.62*avg;
+      ctx.fillStyle=`rgb(12,${Math.round(b*220)},28)`;
+    } else {
+      const b=0.22+0.58*(1-avg);
+      ctx.fillStyle=`rgb(${Math.round(b*205)},18,18)`;
+    }
+    ctx.beginPath();
+    ctx.moveTo(p00.x,p00.y);ctx.lineTo(p10.x,p10.y);ctx.lineTo(p11.x,p11.y);ctx.lineTo(p01.x,p01.y);
+    ctx.closePath();ctx.fill();
+    ctx.strokeStyle='rgba(0,0,0,0.14)';ctx.lineWidth=0.2;ctx.stroke();
+  }
+  const pt=proj(ns,0,tn);
+  ctx.fillStyle='rgba(255,215,0,0.88)';ctx.font='9px sans-serif';ctx.textAlign='left';
+  ctx.fillText('τ plane',pt.x+3,pt.y-2);
+  ctx.fillStyle='var(--color-text-secondary)';ctx.font='9px sans-serif';
+  const pX=proj(ns+0.6,0,0);ctx.fillText('Resources →',pX.x+2,pX.y+2);
+  const pY=proj(0,ns+0.9,0);ctx.fillText('Coordination →',pY.x+2,pY.y+7);
+  ctx.fillStyle='rgba(77,143,192,0.85)';ctx.font='8px sans-serif';
+  PEAKS.forEach((p,idx)=>{
+    const gi=Math.round(p.cx*ns),gj=Math.round(p.cy*ns);
+    const si=Math.min(gi*step,N-1),sj=Math.min(gj*step,N-1);
+    const z=sc[sj*N+si]/100;
+    const pp=proj(gi,gj,z);
+    ctx.beginPath();ctx.arc(pp.x,pp.y,3,0,Math.PI*2);ctx.fill();
+  });
+}
+
+let wChart=null;
+function drawCurve(thresh){
+  const k=9;
+  const pts=Array.from({length:101},(_,x)=>({
+    x,y:Math.max(2,Math.round(97*(1-0.88/(1+Math.exp(-(x-thresh)/k)))))
+  }));
+  const thLine=[{x:thresh,y:0},{x:thresh,y:100}];
+  if(!wChart){
+    wChart=new Chart(document.getElementById('wcrv'),{
+      type:'line',
+      data:{datasets:[
+        {data:pts,borderColor:'#c84040',borderWidth:2,
+         backgroundColor:'rgba(200,64,64,0.07)',fill:true,tension:0.4,pointRadius:0},
+        {data:thLine,borderColor:'#ffd700',borderWidth:1.5,borderDash:[5,4],
+         pointRadius:0,fill:false}
+      ]},
+      options:{
+        responsive:true,maintainAspectRatio:false,parsing:false,
+        plugins:{legend:{display:false}},
+        scales:{
+          x:{type:'linear',min:0,max:100,
+             title:{display:true,text:'Community governance score (RRMA)',font:{size:9}},
+             ticks:{font:{size:9},maxTicksLimit:6}},
+          y:{min:0,max:100,
+             title:{display:true,text:'Fire risk',font:{size:9}},
+             ticks:{font:{size:9},maxTicksLimit:5}}
+        }
+      }
+    });
+  } else {
+    wChart.data.datasets[0].data=pts;
+    wChart.data.datasets[1].data=thLine;
+    wChart.update('none');
+  }
+}
+
+function wUpdate(){
+  const t=+document.getElementById('wst').value;
+  const a=+document.getElementById('wsa').value;
+  const b=+document.getElementById('wsb').value;
+  document.getElementById('wvt').textContent=t;
+  document.getElementById('wva').textContent=a+'%';
+  document.getElementById('wvb').textContent=b+'%';
+  document.getElementById('wtlbl').textContent=t;
+  const sc=computeScores(a,b);
+  draw2D(sc,t);
+  draw3D(sc,t);
+  drawCurve(t);
+}
+['wst','wsa','wsb'].forEach(id=>document.getElementById(id).addEventListener('input',wUpdate));
+wUpdate();
+})();
+</script>
