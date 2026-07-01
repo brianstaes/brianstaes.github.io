@@ -1,0 +1,8 @@
+<img src="{{ '/images/' | append: site.owner.avatar | relative_url }}" class="bio-photo" alt="Brian M. Staes headshot">
+
+<p>{{ site.owner.bio }}</p>
+
+{% if site.owner.email %}<p style="text-indent:0;margin-top:1.5em;"><a href="mailto:{{ site.owner.email }}" target="_blank"><i class="icon-mail"></i> Email</a></p>{% endif %}
+{% if site.owner.cv %}<p style="text-indent:0;"><a href="{{ site.owner.cv | relative_url }}">CV</a></p>{% endif %}
+{% if site.owner.github %}<p style="text-indent:0;"><a href="https://github.com/{{ site.owner.github }}"><i class="icon-github"></i> Github</a></p>{% endif %}
+{% if site.owner.scholar %}<p style="text-indent:0;"><a href="{{ site.owner.scholar }}"><i class="ai ai-google-scholar-square"></i> Google Scholar</a></p>{% endif %}
