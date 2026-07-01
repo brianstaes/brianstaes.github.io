@@ -1,0 +1,59 @@
+title: BRIANS Lab
+tagline: Building Resilient Infrastructure and Adaptive Network Systems
+description: BRIANS Lab develops data-driven, simulation-based, and governance-aware tools for resilient transportation and infrastructure systems.
+url: ""
+baseurl: ""
+
+timezone: America/New_York
+future: true
+highlighter: rouge
+permalink: /:categories/:title
+
+owner:
+  name: Brian M. Staes
+  avatar: Brian_headshot.jpeg
+  bio: Assistant Professor, University of Georgia<br>Building Resilient Infrastructure and Adaptive Network Systems Lab
+  email: brian.staes@uga.edu
+  cv: /assets/BrianMStaes_CV_Full.pdf
+  github: brianstaes
+  scholar: https://scholar.google.com/citations?user=gkaR44MAAAAJ&hl=en&oi=ao
+
+links:
+  - title: Lab
+    url: /
+  - title: About Brian
+    url: /about/
+  - title: Research
+    url: /research/
+  - title: Research Products
+    url: /products/
+  - title: People
+    url: /people/
+  - title: Contact
+    url: /contact/
+
+kramdown:
+  auto_ids: true
+  footnote_nr: 1
+  entity_output: as_char
+  toc_levels: 1..6
+  enable_coderay: false
+
+include: [".htaccess"]
+exclude:
+  - "backup"
+  - "lib"
+  - "config.rb"
+  - "Capfile"
+  - "config"
+  - "log"
+  - "Rakefile"
+  - "Rakefile.rb"
+  - "tmp"
+  - "less"
+  - "minimal-mistakes.sublime-project"
+  - "minimal-mistakes.sublime-workspace"
+
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
