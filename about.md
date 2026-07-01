@@ -6,7 +6,7 @@ title: About Brian
 
 ## About
 
-<img src="{{ '/images/Brian_headshot.jpeg' | relative_url }}" class="floatpic brian-headshot" alt="Brian M. Staes headshot">
+<img src="{{ '/images/Brian_Full.jpeg' | relative_url }}" class="floatpic brian-headshot" alt="Brian M. Staes headshot">
 
 I’m a transportation engineering researcher focused on natural-hazard-driven infrastructure resilience, traffic-flow modeling, climate-informed risk assessment for U.S. rail networks, and decision-support tools for resilient infrastructure systems. My work blends operations, climate data, simulation, and governance-aware planning to help agencies harden critical assets and keep people and goods moving.
 
