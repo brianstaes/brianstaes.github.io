@@ -2,6 +2,7 @@
 layout: page
 permalink: /index.html
 title: BRIANS Lab
+description: The BRIANS Lab at the University of Georgia develops data-driven, simulation-based, and governance-aware tools for resilient transportation and infrastructure systems.
 image:
   thumb: Brain_Lab_UGA.png
 ---
