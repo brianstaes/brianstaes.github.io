@@ -2,6 +2,8 @@
 layout: page
 permalink: /index.html
 title: BRIANS Lab
+image:
+  thumb: Brain_Lab_UGA.png
 ---
 
 <div class="lab-hero-logo">
