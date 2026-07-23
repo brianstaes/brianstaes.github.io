@@ -12,7 +12,7 @@ permalink: /:categories/:title
 owner:
   name: Brian M. Staes
   avatar: Brian_headshot.jpeg
-  bio: Assistant Professor, University of Georgia<br>Building Resilient Infrastructure and Adaptive Network Systems Lab
+  bio: Assistant Professor, University of Georgia
   email: brian.staes@uga.edu
   cv: /assets/BrianMStaes_CV_Full.pdf
   github: brianstaes
